@@ -6,7 +6,7 @@ export const connectToMongo = () => {
       dbName: process.env.DATABASE_NAME,
     })
     .then((res) => {
-      console.log("Database Connected Succesfully");
+      console.log(`Database Connected Succesfully ${res.connection.host}`);
     })
     .catch((err) => {
       console.log("Failed to Connect Database");
