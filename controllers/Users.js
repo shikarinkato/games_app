@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { sendCookies } from "../middlewares/Cookie.js";
 
 export const Register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, pic } = req.body;
 
   try {
     let user = await User.findOne({ email });
@@ -13,7 +13,7 @@ export const Register = async (req, res) => {
         .json({ success: false, message: "User Already Exits" });
     }
     const hashedpasword = await bcrypt.hash(password, 10);
-    user = await User.create({ name, email, password: hashedpasword });
+    user = await User.create({ name, email, password: hashedpasword, pic });
 
     sendCookies(req, res, user, "Registered Succesfully", 201);
   } catch (error) {
@@ -26,7 +26,6 @@ export const Register = async (req, res) => {
 
 export const Login = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     let user = await User.findOne({ email }).select("+password");
 
@@ -47,7 +46,7 @@ export const Login = async (req, res) => {
     user = await User.findById(user._id);
     sendCookies(req, res, user, `Welcome Back ${user.name}`, 200);
 
-    console.log(req.cookies);
+    // console.log(req.cookies);
   } catch (error) {
     console.log(error.message);
     res
@@ -73,15 +72,27 @@ export const Logout = async (req, res) => {
   }
 };
 
-export const GetMyProfile = async (req, res) => {
+export const UpdateDetails = async (req, res) => {
+  const { name, email, pic } = req.body;
+  // console.log(req.user._id)
   try {
-    const user = req.user;
+    const updatedData = { name, email, pic };
 
-    res.json({ success: true, message: `Hey ${user.name}`, user });
+    let updatedUser = await User.findByIdAndUpdate(req.user._id, updatedData, {
+      new: true,
+    });
+    if (!updatedUser) {
+      res.status(400).json({ message: "User Not Found", success: false });
+    }
+    res.status(200).json({
+      message: "Profile Updated Succesfullyf",
+      updatedData,
+      success: true,
+    });
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     res
       .status(500)
-      .json({ success: false, message: "Some Internal Server Occured" });
+      .json({ message: "Some Internal Server Error", success: false });
   }
 };

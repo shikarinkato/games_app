@@ -5,6 +5,7 @@ export const sendCookies = (req, res, user, message, statuscode = 200) => {
     id: user._id,
     name: user.name,
     email: user.email,
+    pic: user.pic,
   };
 
   const token = jwt.sign(
