@@ -16,7 +16,7 @@ export const sendCookies = (req, res, user, message, statuscode = 200) => {
   res
     .status(statuscode)
     .cookie("cookies", token, {
-      expires: new Date(Date.now() + 30 * 60 * 1000),
+      expires: new Date(Date.now() + 30 * 86400000),
       httpOnly: true,
       secure: process.env.NODE_ENV === "Development" ? false : true,
     })

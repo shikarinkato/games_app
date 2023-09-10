@@ -84,11 +84,7 @@ export const UpdateDetails = async (req, res) => {
     if (!updatedUser) {
       res.status(400).json({ message: "User Not Found", success: false });
     }
-    res.status(200).json({
-      message: "Profile Updated Succesfullyf",
-      updatedData,
-      success: true,
-    });
+    sendCookies(req, res, updatedData, "Profile Updated Succesfully", 200);
   } catch (error) {
     console.log(error);
     res
