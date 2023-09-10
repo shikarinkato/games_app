@@ -3,6 +3,7 @@ import User from "../models/UserSchema.js";
 
 export const IsAuthenticated = async (req, res, next) => {
   const { cookies } = req.cookies;
+  // console.log(cookies);
   if (!cookies) {
     return res
       .status(400)
@@ -11,6 +12,7 @@ export const IsAuthenticated = async (req, res, next) => {
 
   const verified_token = jwt.verify(cookies, process.env.JWT_SECRET);
   const user = await User.findById(verified_token.id);
+  // console.log(verified_token);
   req.user = user;
   next();
 };

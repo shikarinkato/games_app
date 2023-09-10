@@ -76,15 +76,22 @@ export const UpdateDetails = async (req, res) => {
   const { name, email, pic } = req.body;
   // console.log(req.user._id)
   try {
+    if (!req.user) {
+      res.status(401).json({ message: "Unauthorized", success: false });
+      return;
+    }
     const updatedData = { name, email, pic };
+    const userid = req.user._id;
 
     let updatedUser = await User.findByIdAndUpdate(req.user._id, updatedData, {
       new: true,
     });
+    // console.log(updatedData);
+    // console.log(updatedUser);
     if (!updatedUser) {
       res.status(400).json({ message: "User Not Found", success: false });
     }
-    sendCookies(req, res, updatedData, "Profile Updated Succesfully", 200);
+    sendCookies(req, res, updatedUser, "Profile Updated Succesfully", 200);
   } catch (error) {
     console.log(error);
     res
