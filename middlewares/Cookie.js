@@ -6,8 +6,11 @@ export const sendCookies = (req, res, user, message, statuscode = 200) => {
     name: user.name,
     email: user.email,
     pic: user.pic,
+    wishlist: user.wishlist,
+    cart: user.cart,
   };
   const id = userWithoutPassword.id;
+  console.log(user)
 
   const token = jwt.sign(
     { id: userWithoutPassword.id },

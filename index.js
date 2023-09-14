@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import { config } from "dotenv";
 import UserRouter from "./routes/Users.js";
+import WishListRouter from "./routes/Wishlist.js";
+import CartRouter from "./routes/cart.js";
 import cookieParser from "cookie-parser";
 
 export const app = express();
@@ -22,6 +24,8 @@ app.use(
 );
 app.use(cookieParser());
 
+app.use("/api/v3/cart", CartRouter);
+app.use("/api/v3/wishlist", WishListRouter);
 app.use("/api/v3/users", UserRouter);
 
 app.get("/", (req, res) => {
