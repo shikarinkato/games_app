@@ -34,13 +34,14 @@ export const getCartItems = async (req, res) => {
     let user = await User.findById(req.user._id);
 
     if (!user) {
-      ErrorHandler(res, 404, "Game Not Found");
+      ErrorHandler(res, 404, "User Not Found");
     }
     let item = await user.populate("cart");
     item = item.cart;
 
     if (!item || item.length === 0) {
       ErrorHandler(res, 404, "Game Not Found");
+      return;
     }
     // console.log(item);
     res.status(200).json({ item });
@@ -57,6 +58,7 @@ export const removeCartItem = async (req, res) => {
   try {
     if (!itemID) {
       ErrorHandler(res, 400, "Id is Missing");
+      return;
     }
 
     let user = await User.findById(req.user._id);

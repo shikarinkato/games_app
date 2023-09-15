@@ -1,6 +1,7 @@
 import { ErrorHandler } from "../middlewares/ErrorHandler.js";
 import WishList from "../models/WishListSchema.js";
 import User from "../models/UserSchema.js";
+import jwt from "jsonwebtoken";
 
 export const addToWishList = async (req, res) => {
   const { game_id, name, pic } = req.body;
@@ -34,7 +35,7 @@ export const getitems = async (req, res) => {
     let user = await User.findById(req.user._id);
 
     if (!user) {
-      ErrorHandler(res, 404, "Game Not Found");
+      ErrorHandler(res, 404, "User Not Found");
     }
     let item = await user.populate("wishlist");
     item = item.wishlist;
@@ -76,4 +77,9 @@ export const removeitem = async (req, res) => {
     ErrorHandler(res, 500, "Some Internal Server Error");
     return;
   }
+};
+
+export const extra = (req, res) => {
+  const token = jwt.sign({ id: "454545" }, "123456");
+  res.status(200).setHeader("Authorization", `Bearer ${token}`).send("Hii");
 };

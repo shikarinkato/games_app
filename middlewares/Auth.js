@@ -1,18 +1,28 @@
 import jwt from "jsonwebtoken";
 import User from "../models/UserSchema.js";
+import { ErrorHandler } from "./ErrorHandler.js";
 
 export const IsAuthenticated = async (req, res, next) => {
-  const { cookies } = req.cookies;
-  // console.log(cookies);
-  if (!cookies) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Log in or Register First" });
-  }
+  let authHeader = req.headers.Authorization || req.headers.authorization;
 
-  const verified_token = jwt.verify(cookies, process.env.JWT_SECRET);
-  const user = await User.findById(verified_token.id);
-  // console.log(verified_token);
-  req.user = user;
-  next();
+  if (authHeader) {
+    let token = authHeader.split(" ")[1];
+    try {
+      const verified_token = jwt.verify(token, process.env.JWT_SECRET);
+
+      const user = await User.findById(verified_token.id);
+      if (!user) {
+        ErrorHandler(res, 400, "Token is Not Valid");
+        return;
+      }
+      req.user = user;
+      next();
+    } catch (error) {
+      ErrorHandler(res, 401, "Unauthorized! Invalid Token");
+    }
+  } else {
+    res.status(401).json({
+      message: "Unauthorized! Please Log in with Correct Credentials",
+    });
+  }
 };
