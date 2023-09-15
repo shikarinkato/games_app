@@ -13,7 +13,7 @@ export const Register = async (req, res) => {
         .status(400)
         .json({ success: false, message: "User Already Exits" });
     }
-    console.log(User);
+    // console.log(User);
     const hashedpasword = await bcrypt.hash(password, 10);
     user = await User.create({ name, email, password: hashedpasword, pic });
 
@@ -26,6 +26,7 @@ export const Register = async (req, res) => {
 };
 
 export const Login = async (req, res) => {
+  console.log(req.headers);
   const { email, password } = req.body;
   try {
     let user = await User.findOne({ email }).select("+password");
@@ -52,9 +53,8 @@ export const Login = async (req, res) => {
       await User.populate(user, {
         path: "cart",
       });
-    console.log(user);
     sendCookies(req, res, user, `Welcome Back ${user.name}`, 200);
-    console.log(user);
+    // console.log(user);
 
     // console.log(req.cookies);
   } catch (error) {

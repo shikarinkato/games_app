@@ -3,6 +3,5 @@ export const ErrorHandler = (res, statusCode, message) => {
     message: message,
     success: false,
   });
-  console.log(res);
   return;
 };

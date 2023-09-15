@@ -3,7 +3,7 @@ import cors from "cors";
 import { config } from "dotenv";
 import UserRouter from "./routes/Users.js";
 import WishListRouter from "./routes/Wishlist.js";
-import CartRouter from "./routes/cart.js";
+import CartRouter from "./routes/Cart.js";
 import cookieParser from "cookie-parser";
 
 export const app = express();

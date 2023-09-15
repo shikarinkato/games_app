@@ -10,13 +10,12 @@ export const sendCookies = (req, res, user, message, statuscode = 200) => {
     cart: user.cart,
   };
   const id = userWithoutPassword.id;
-  console.log(user)
 
   const token = jwt.sign(
     { id: userWithoutPassword.id },
     process.env.JWT_SECRET
   );
-  // console.log(user._id);
+
   res
     .status(statuscode)
     .cookie("cookies", token, {
@@ -29,5 +28,6 @@ export const sendCookies = (req, res, user, message, statuscode = 200) => {
       message,
       user: userWithoutPassword,
     });
+  // console.log(res.header);
   req.cookies;
 };

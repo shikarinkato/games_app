@@ -42,7 +42,6 @@ export const getitems = async (req, res) => {
     if (!item || item.length === 0) {
       ErrorHandler(res, 404, "Game Not Found");
     }
-    console.log(item);
     res.status(200).json({ item });
   } catch (error) {
     console.log(error.message);
@@ -71,7 +70,6 @@ export const removeitem = async (req, res) => {
     if (!item) {
       ErrorHandler(res, 404, "Game Not Found");
     }
-    console.log(item);
     res.status(200).json({ item });
   } catch (error) {
     console.log(error.message);
