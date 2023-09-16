@@ -10,19 +10,28 @@ export const addToWishList = async (req, res) => {
       ErrorHandler(res, 400, "All Fields Are Mandatory");
       return;
     }
-    let item = await WishList.create({
+    let item = await WishList.findOne({ game_id });
+    if (item) {
+      res
+        .status(200)
+        .json({ item, message: "Item is Already in Wishlist", success: true });
+      return;
+    }
+    item = await WishList.create({
       game_id,
       name,
       pic,
       user: req.user._id,
+      isAdded: true,
     });
 
     await User.findByIdAndUpdate(req.user._id, {
       $push: { wishlist: [item._id] },
     });
 
-    res.status(201).json(item);
-    // console.log(item, req.user);
+    res
+      .status(201)
+      .json({ item, message: "Added To Wishlist Succesfully", success: true });
   } catch (error) {
     console.log(error.message);
     ErrorHandler(res, 500, "Some Internal Server Error");
@@ -43,7 +52,9 @@ export const getitems = async (req, res) => {
     if (!item || item.length === 0) {
       ErrorHandler(res, 404, "Game Not Found");
     }
-    res.status(200).json({ item });
+    res
+      .status(200)
+      .json({ item, message: "Items fetched Successfully", success: true });
   } catch (error) {
     console.log(error.message);
     ErrorHandler(res, 500, "Some Internal Server Error");
@@ -79,7 +90,3 @@ export const removeitem = async (req, res) => {
   }
 };
 
-export const extra = (req, res) => {
-  const token = jwt.sign({ id: "454545" }, "123456");
-  res.status(200).setHeader("Authorization", `Bearer ${token}`).send("Hii");
-};

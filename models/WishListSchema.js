@@ -5,6 +5,7 @@ const Wishlist = new Schema(
     game_id: {
       type: String,
       requred: true,
+      unique: true,
     },
     name: {
       type: String,
@@ -17,6 +18,11 @@ const Wishlist = new Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
+    },
+    isAdded: {
+      type:Boolean,
+      required: true,
+      default:false,
     },
   },
   { timestamps: true }

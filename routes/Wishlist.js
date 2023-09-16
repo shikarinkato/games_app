@@ -1,7 +1,6 @@
 import Express from "express";
 import {
   addToWishList,
-  extra,
   getitems,
   removeitem,
 } from "../controllers/Wishlist.js";
@@ -13,6 +12,5 @@ router
   .get(IsAuthenticated, getitems)
   .post(IsAuthenticated, addToWishList);
 router.delete("/:id", IsAuthenticated, removeitem);
-router.get("/extra", extra);
 
 export default router;

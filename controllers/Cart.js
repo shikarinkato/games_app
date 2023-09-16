@@ -43,7 +43,6 @@ export const getCartItems = async (req, res) => {
       ErrorHandler(res, 404, "Game Not Found");
       return;
     }
-    // console.log(item);
     res.status(200).json({ item });
   } catch (error) {
     console.log(error.message);
@@ -72,9 +71,11 @@ export const removeCartItem = async (req, res) => {
 
     if (!item) {
       ErrorHandler(res, 404, "Item Not Found");
+      return;
     }
-    // console.log(item);
-    res.status(200).json({ item });
+    res
+      .status(200)
+      .json({ item, message: "Item Deleted Successfully", success: true });
   } catch (error) {
     console.log(error.message);
     ErrorHandler(res, 500, "Some Internal Server Error");

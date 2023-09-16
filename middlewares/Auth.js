@@ -20,6 +20,10 @@ export const IsAuthenticated = async (req, res, next) => {
     } catch (error) {
       ErrorHandler(res, 401, "Unauthorized! Invalid Token");
     }
+    if (!token) {
+      ErrorHandler(res, 400, "Token is Not valid");
+      return;
+    }
   } else {
     res.status(401).json({
       message: "Unauthorized! Please Log in with Correct Credentials",
