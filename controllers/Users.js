@@ -9,11 +9,10 @@ export const Register = async (req, res) => {
   try {
     let user = await User.findOne({ email });
     if (user) {
-      return res
-        .status(400)
-        .json({ success: false, message: "User Already Exits" });
+      ErrorHandler(res, 400, "User Already Exists");
+      return;
     }
-    // console.log(User);
+
     const hashedpasword = await bcrypt.hash(password, 10);
     user = await User.create({ name, email, password: hashedpasword, pic });
 
@@ -31,34 +30,27 @@ export const Login = async (req, res) => {
     let user = await User.findOne({ email }).select("+password");
 
     if (!user) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: "User Doesn't Exists",
-        });
+      ErrorHandler(res, 403, "User Doesn't Exists");
+      return;
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Invalid Email or Password" });
+      ErrorHandler(res, 401, "Invalid Email or Password");
+      return;
     }
 
     user = await User.findById(user._id);
     user = await User.populate(user, {
       path: "wishlist",
     });
-    user,
-      await User.populate(user, {
-        path: "cart",
-      });
-    sendCookies(req, res, user, `Welcome Back ${user.name}`, 200);
-    // console.log(user);
+    user = await User.populate(user, {
+      path: "cart",
+    });
 
-    // console.log(req.cookies);
+    sendCookies(req, res, user, `Welcome Back ${user.name}`, 200);
+    
   } catch (error) {
     console.log(error.message);
     ErrorHandler(res, 500, "Some Internal Server Error");
@@ -87,7 +79,7 @@ export const UpdateDetails = async (req, res) => {
   // console.log(req.user._id)
   try {
     if (!req.user) {
-      res.status(401).json({ message: "Unauthorized", success: false });
+      ErrorHandler(re, 401, "Unauthorized");
       return;
     }
     const updatedData = { name, email, pic };
@@ -99,7 +91,8 @@ export const UpdateDetails = async (req, res) => {
     // console.log(updatedData);
     // console.log(updatedUser);
     if (!updatedUser) {
-      res.status(400).json({ message: "User Not Found", success: false });
+      ErrorHandler(res, 400, "User Not Found");
+      return;
     }
     sendCookies(req, res, updatedUser, "Profile Updated Succesfully", 200);
   } catch (error) {

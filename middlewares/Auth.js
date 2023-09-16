@@ -28,5 +28,6 @@ export const IsAuthenticated = async (req, res, next) => {
     res.status(401).json({
       message: "Unauthorized! Please Log in with Correct Credentials",
     });
+    return;
   }
 };

@@ -44,13 +44,15 @@ export const getitems = async (req, res) => {
     let user = await User.findById(req.user._id);
 
     if (!user) {
-      ErrorHandler(res, 404, "User Not Found");
+      ErrorHandler(res, 401, "User Not Found");
+      return;
     }
     let item = await user.populate("wishlist");
     item = item.wishlist;
 
     if (!item || item.length === 0) {
       ErrorHandler(res, 404, "Game Not Found");
+      return;
     }
     res
       .status(200)
@@ -68,6 +70,7 @@ export const removeitem = async (req, res) => {
   try {
     if (!itemID) {
       ErrorHandler(res, 400, "Item Id is Missing");
+      return;
     }
 
     let user = await User.findById(req.user._id);
@@ -81,6 +84,7 @@ export const removeitem = async (req, res) => {
 
     if (!item) {
       ErrorHandler(res, 404, "Game Not Found");
+      return;
     }
     res.status(200).json({ item });
   } catch (error) {
@@ -89,4 +93,3 @@ export const removeitem = async (req, res) => {
     return;
   }
 };
-

@@ -35,6 +35,7 @@ export const getCartItems = async (req, res) => {
 
     if (!user) {
       ErrorHandler(res, 404, "User Not Found");
+      return;
     }
     let item = await user.populate("cart");
     item = item.cart;
